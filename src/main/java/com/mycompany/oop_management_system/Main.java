@@ -11,13 +11,16 @@ import java.util.List;
  *
  * @author chedn
  */
-public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
+public class Main extends javax.swing.JFrame { // Inheritance; uses "extends" to customize the JFrame
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
-        // Encapsulation (setters)
+        /** 
+         * Encapsulation (setters)
+         * Sets the initial properties of txtConsume and txtTotal
+         */ 
         txtWaterConsume.setBackground(java.awt.Color.decode("#D3D3D3"));
         txtWaterTotal.setBackground(java.awt.Color.decode("#D3D3D3"));
         txtElecConsume.setBackground(java.awt.Color.decode("#D3D3D3"));
@@ -27,14 +30,17 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         txtElecTotal.setFocusable(false);
         txtWaterTotal.setFocusable(false);
         
+        // Declare the header titles of the JTable
         String[] columnNames = { "ID", "Unit #", "Tenant", "Rent", "Internet", "Electricity", "Water", "Month", "Year" };
 
-        // Polymorphism; DatabaseUtility methods provides unique responses
-        String query = "SELECT * FROM bill_tbl"; // Your query
-        DefaultTableModel model = DatabaseUtility.fetchData(query, null, columnNames); // Abstraction; code for DatabaseUtility.fetchdata is hidden
+        // Polymorphism; DatabaseUtility methods provides unique responses (called multiple times in the program)
+        String query = "SELECT * FROM bill_tbl"; // SQL database query to fetch all bills
 
-        // Set the model to the JTable
-        tblContent.setModel(model);  // Replace 'yourJTable' with your actual JTable variable
+        // Abstraction; code for DatabaseUtility.fetchdata is hidden
+        DefaultTableModel model = DatabaseUtility.fetchData(query, null, columnNames); // Call the method fetchData and store it in model
+
+        // Set the model to the JTable (setter)
+        tblContent.setModel(model);  // Populate the table with data from the database
     }
 
     /**
@@ -443,19 +449,20 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    // Method to ADD entry to the database
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        // Container to store the names of tenants
         String[] tenant_name = {
-            "James Smith",   // American
-            "Sofia Rodriguez", // Spanish
-            "David Garcia",   // Mexican
-            "Maria Hernandez", // Spanish
-            "Matthew Johnson", // American
-            "Isabella Lopez",  // Spanish
-            "Carlos Perez",    // Mexican
-            "Emily Martinez",  // American
-            "Juan Torres",     // Mexican
-            "Eva Sanchez"      // Spanish
+            "James Smith",   
+            "Sofia Rodriguez", 
+            "David Garcia",   
+            "Maria Hernandez", 
+            "Matthew Johnson", 
+            "Isabella Lopez",  
+            "Carlos Perez",    
+            "Emily Martinez",  
+            "Juan Torres",     
+            "Eva Sanchez"      
         };
 
         // Default values in case of empty fields
@@ -472,7 +479,10 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         float elecRate = 0f;
         int elecMonth = 0;
         int elecYear = 0;
-
+   
+        /**
+         * Encapsulation (getters) with error handling
+         */
         try {
             // Unit and rent fields
             // Encapsulation (getters)
@@ -523,29 +533,28 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             float elecBill = elecConsume * elecRate;
             float waterBill = waterConsume * waterRate;
 
-            // SQL query and execution
+            // SQL query and execution for adding entry to water_tbl
             String queryWaterInsert = "INSERT INTO water_tbl (unit_id, previous, current, consumption, rate, total, month, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             Object[] valuesWater = {unit, waterPrev, waterCurr, waterConsume, waterRate, waterBill, waterMonth, waterYear};
             DatabaseUtility.mysqlQuery(queryWaterInsert, valuesWater); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
             
-            // SQL query and execution
+            // SQL query and execution for adding entry to electricity_tbl
             String queryElecInsert = "INSERT INTO electricity_tbl (unit_id, previous, current, consumption, rate, total, month, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             Object[] valuesElec = {unit, elecPrev, elecCurr, elecConsume, elecRate, elecBill, elecMonth, elecYear};
             DatabaseUtility.mysqlQuery(queryElecInsert, valuesElec); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
             
-            // SQL query and execution
+            // SQL query and execution for adding entry to bill_tbl
             String queryBillInsert = "INSERT INTO bill_tbl (unit_id, tenant_name, rent, internet, electricity, water, month, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             Object[] valuesBill = {unit, tenant_name[unit], rent, internet, waterBill, elecBill, waterMonth, waterYear};
             DatabaseUtility.mysqlQuery(queryBillInsert, valuesBill); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
              
-            
+            // Repopulating the JTable after adding an entry
             String[] columnNames = { "ID", "Unit #", "Tenant", "Rent", "Internet", "Electricity", "Water", "Month", "Year" };
             String query = "SELECT * FROM bill_tbl"; // Your query
             DefaultTableModel model = DatabaseUtility.fetchData(query, null, columnNames); // Abstraction; code for DatabaseUtility.fetchData is hidden
             // Set the model to the JTable
             tblContent.setModel(model);
             
-            // Additional code can go here
         } catch (NumberFormatException e) {
             // Handle invalid input (non-numeric data in fields)
             JOptionPane.showMessageDialog(null, "Please enter valid numeric values.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -554,6 +563,11 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        
+        /**
+         * Encapsulation; setters
+         * Reset all textFields
+         */
         txtUnit.setText("");
         txtRent.setText("");
         txtInternet.setText("");
@@ -590,29 +604,28 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         txtElecYear.setBackground(java.awt.Color.WHITE);
     }//GEN-LAST:event_btnAddActionPerformed
 
+    // Method to EDIT entry from the database
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        // TODO add your handling code here:
         int selectedRow = tblContent.getSelectedRow();  // Get the selected row index
 
         if (selectedRow != -1) {  // Check if a row is selected
             // Get values from the selected row
             int month = (int) tblContent.getValueAt(selectedRow, 7);  // Get the month as an integer
             int year = (int) tblContent.getValueAt(selectedRow, 8);  // Get the year as an integer
-            int unit = (int) tblContent.getValueAt(selectedRow, 1);
-            int rent = (int) tblContent.getValueAt(selectedRow, 3);
-            int internet = (int) tblContent.getValueAt(selectedRow, 4);
+            int unit = (int) tblContent.getValueAt(selectedRow, 1); // Get the unit as an integer
+            int rent = (int) tblContent.getValueAt(selectedRow, 3); // Get the rent as an integer
+            int internet = (int) tblContent.getValueAt(selectedRow, 4); // Get the internet as an integer
             
-
+            // SQL query to fetch the specific row selected from the JTable
             String water_query = "SELECT * FROM water_tbl WHERE month = ? AND year = ? AND unit_id = ?";
             // Fetch data from the database using the selected month and year
-            List<Object[]> water = DatabaseUtility.fetchDataWithWhere(water_query, month, year, unit); // Abstraction; code for DatabaseUtility.fetchDataWithWhere is hidden
+            List<Object[]> water = DatabaseUtility.fetchDataWithWhere(water_query, month, year, unit); // Abstraction; storing the query result to water variable
 
-            // Assuming you expect only one row to match, handle the first result
+            // Assuming only one row to match, handle the first result
             if (!water.isEmpty()) {
                 Object[] rowData = water.get(0);  // Get the first (and possibly only) row
 
                 // Store the values from the row into variables
-                //int unit = Integer.parseInt(rowData[1].toString());  // Adjust based on the column order
                 float waterPrev = Float.parseFloat(rowData[2].toString());
                 float waterCurr = Float.parseFloat(rowData[3].toString());
                 float waterConsume = Float.parseFloat(rowData[4].toString());
@@ -621,7 +634,7 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
                 int waterMonth = Integer.parseInt(rowData[7].toString());
                 int waterYear = Integer.parseInt(rowData[8].toString());
 
-                // You can now use these variables (e.g., display them in text fields)
+                // Variables for display (e.g., display them in text fields)
                 txtUnit.setText(String.valueOf(unit));
                 txtWaterPrev.setText(String.valueOf(waterPrev));
                 txtWaterCurr.setText(String.valueOf(waterCurr));
@@ -635,20 +648,18 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
                 txtWaterYear.setEditable(false);
                 txtWaterMonth.setFocusable(false);
                 txtWaterYear.setFocusable(false);
-                // txtWaterMonth.setBackground(java.awt.Color.decode("#D3D3D3"));
-                // txtWaterYear.setBackground(java.awt.Color.decode("#D3D3D3"));
             }
             
+            // SQL query to fetch the specific row selected from the JTable
             String elec_query = "SELECT * FROM electricity_tbl WHERE month = ? AND year = ? AND unit_id = ?";
             // Fetch data from the database using the selected month and year
             List<Object[]> elec = DatabaseUtility.fetchDataWithWhere(elec_query, month, year, unit); // Abstraction; code for DatabaseUtility.fetchDataWithWhere is hidden
 
-            // Assuming you expect only one row to match, handle the first result
+            // Assuming only one row to match, handle the first result
             if (!water.isEmpty()) {
                 Object[] rowData = elec.get(0);  // Get the first (and possibly only) row
 
                 // Store the values from the row into variables
-                // int unit = Integer.parseInt(rowData[1].toString());  // Adjust based on the column order
                 float elecPrev = Float.parseFloat(rowData[2].toString());
                 float elecCurr = Float.parseFloat(rowData[3].toString());
                 float elecConsume = Float.parseFloat(rowData[4].toString());
@@ -657,8 +668,7 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
                 int elecMonth = Integer.parseInt(rowData[7].toString());
                 int elecYear = Integer.parseInt(rowData[8].toString());
 
-                // You can now use these variables (e.g., display them in text fields)
-                // txtUnit.setText(String.valueOf(unit));
+                // Variables for display (e.g., display them in text fields)
                 txtElecPrev.setText(String.valueOf(elecPrev));
                 txtElecCurr.setText(String.valueOf(elecCurr));
                 txtElecConsume.setText(String.valueOf(elecConsume));
@@ -671,8 +681,6 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
                 txtElecYear.setEditable(false);
                 txtElecMonth.setFocusable(false);
                 txtElecYear.setFocusable(false);
-                // txtElecMonth.setBackground(java.awt.Color.decode("#D3D3D3"));
-                // txtElecYear.setBackground(java.awt.Color.decode("#D3D3D3"));
             }
             txtRent.setText(String.valueOf(rent));
             txtInternet.setText(String.valueOf(internet));
@@ -681,37 +689,42 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
+    // Method to DELETE entry from the database
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
         int selectedRow = tblContent.getSelectedRow();  // Get the selected row index
 
         if (selectedRow != -1) {  // Check if a row is selected
             // Get values from the selected row
-            int month = (int) tblContent.getValueAt(selectedRow, 7);  // Get the month as an integer
-            int year = (int) tblContent.getValueAt(selectedRow, 8);  // Get the year as an integer
+            int month = (int) tblContent.getValueAt(selectedRow, 7);  
+            int year = (int) tblContent.getValueAt(selectedRow, 8);  
             int unit = (int) tblContent.getValueAt(selectedRow, 1);
             int id = (int) tblContent.getValueAt(selectedRow, 0);
             
-            // SQL query and execution
+            // SQL query and execution for deleting entry to water_tbl
             String queryDeleteWater = "DELETE FROM water_tbl WHERE month = ? AND year = ? AND unit_id = ?";
             Object[] water_values = {month, year, unit};
             DatabaseUtility.mysqlQuery(queryDeleteWater, water_values); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
             
+            // SQL query and execution for deleting entry to electricity_tbl
             String queryDeleteElec = "DELETE FROM electricity_tbl WHERE month = ? AND year = ? AND unit_id = ?";
             Object[] elec_values = {month, year, unit};
             DatabaseUtility.mysqlQuery(queryDeleteElec, elec_values); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
             
+            // SQL query and execution for deleting entry to bill_tbl
             String queryDeleteBill = "DELETE FROM bill_tbl WHERE bill_id = ?";
             Object[] bill_values = {id};
             DatabaseUtility.mysqlQuery(queryDeleteBill, bill_values); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
         }
-        
+        // Repopulating the JTable after deleting an entry
         String[] columnNames = { "ID", "Unit #", "Tenant", "Rent", "Internet", "Electricity", "Water", "Month", "Year" };
-        String query = "SELECT * FROM bill_tbl"; // Your query
+        String query = "SELECT * FROM bill_tbl"; 
         DefaultTableModel model = DatabaseUtility.fetchData(query, null, columnNames); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
-        // Set the model to the JTable
-        tblContent.setModel(model);  // Replace 'yourJTable' with your actual JTable variable
+        tblContent.setModel(model);  
         
+        /**
+         * Encapsulation; setters
+         * Reset all textFields
+         */
         txtWaterMonth.setEditable(true);
         txtWaterYear.setEditable(true);
         txtElecMonth.setEditable(true);
@@ -722,34 +735,34 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         txtWaterYear.setFocusable(true);
         txtElecMonth.setFocusable(true);
         txtElecYear.setFocusable(true);
-        txtWaterMonth.setBackground(java.awt.Color.WHITE);
-        txtElecMonth.setBackground(java.awt.Color.WHITE);
-        txtWaterYear.setBackground(java.awt.Color.WHITE);
-        txtElecYear.setBackground(java.awt.Color.WHITE);
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    // Method to UPDATE entry from the database
     private void save_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_btnActionPerformed
-        // TODO add your handling code here:
         int selectedRow = tblContent.getSelectedRow();  // Get the selected row index
+        
+        // Set the default value for bill_id and unit number
         int bill_id = 0;
         int unit = 0;
+        
         if (selectedRow != -1) {  // Check if a row is selected
             // Get values from the selected row
             bill_id = (int) tblContent.getValueAt(selectedRow, 0);  // Get the month as an integer
-            unit = (int) tblContent.getValueAt(selectedRow, 1);
+            unit = (int) tblContent.getValueAt(selectedRow, 1); // Get the unit as an integer
         }
         
+        // Names of the tenant
         String[] tenant_name = {
-            "James Smith",   // American
-            "Sofia Rodriguez", // Spanish
-            "David Garcia",   // Mexican
-            "Maria Hernandez", // Spanish
-            "Matthew Johnson", // American
-            "Isabella Lopez",  // Spanish
-            "Carlos Perez",    // Mexican
-            "Emily Martinez",  // American
-            "Juan Torres",     // Mexican
-            "Eva Sanchez"      // Spanish
+            "James Smith",   
+            "Sofia Rodriguez", 
+            "David Garcia",   
+            "Maria Hernandez", 
+            "Matthew Johnson", 
+            "Isabella Lopez",  
+            "Carlos Perez",    
+            "Emily Martinez",  
+            "Juan Torres",     
+            "Eva Sanchez"      
         };
 
         // Default values in case of empty fields
@@ -766,6 +779,9 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         int elecMonth = 0;
         int elecYear = 0;
 
+        /**
+         * Encapsulation (getters) with error handling
+         */
         try {
             // Unit and rent fields
             String unitText = txtUnit.getText().trim();
@@ -815,28 +831,27 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             float elecBill = elecConsume * elecRate;
             float waterBill = waterConsume * waterRate;
 
-            // SQL query and execution
+            // SQL query and execution for updating entry to water_tbl
             String queryWaterUpdate = "UPDATE water_tbl SET previous = ?, current = ?, consumption = ?, rate = ?, total = ? WHERE  month = ? AND year = ? AND unit_id = ?";
             Object[] valuesWater = {waterPrev, waterCurr, waterConsume, waterRate, waterBill, waterMonth, waterYear, unit};
             DatabaseUtility.mysqlQuery(queryWaterUpdate, valuesWater); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
 
-            // SQL query and execution
+            // SQL query and execution for updating entry to electricity_tbl
             String queryElecUpdate = "UPDATE electricity_tbl SET previous = ?, current = ?, consumption = ?, rate = ?, total = ? WHERE  month = ? AND year = ? AND unit_id = ?";
             Object[] valuesElec = {elecPrev, elecCurr, elecConsume, elecRate, elecBill, elecMonth, elecYear, unit};
             DatabaseUtility.mysqlQuery(queryElecUpdate, valuesElec); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
 
-            // SQL query and execution
+            // SQL query and execution for updating entry to bill_tbl
             String queryBillUpdate = "UPDATE bill_tbl SET tenant_name = ?, rent = ?, internet = ?, electricity = ?, water = ? WHERE  bill_id = ?";
             Object[] valuesBill = {tenant_name[unit], rent, internet, elecBill, waterBill, bill_id};
             DatabaseUtility.mysqlQuery(queryBillUpdate, valuesBill); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
             
+            // Repopulating the JTable after updating an entry
             String[] columnNames = { "ID", "Unit #", "Tenant", "Rent", "Internet", "Electricity", "Water", "Month", "Year" };
             String query = "SELECT * FROM bill_tbl"; // Your query
             DefaultTableModel model = DatabaseUtility.fetchData(query, null, columnNames); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
-            // Set the model to the JTable
             tblContent.setModel(model);
             
-            // Additional code can go here
         } catch (NumberFormatException e) {
             // Handle invalid input (non-numeric data in fields)
             JOptionPane.showMessageDialog(null, "Please enter valid numeric values.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -845,6 +860,10 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        /**
+         * Encapsulation; setters
+         * Reset all textFields to empty
+         */
         txtUnit.setText("");
         txtRent.setText("");
         txtInternet.setText("");
@@ -875,16 +894,13 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         txtWaterYear.setFocusable(true);
         txtElecMonth.setFocusable(true);
         txtElecYear.setFocusable(true);
-        txtWaterMonth.setBackground(java.awt.Color.WHITE);
-        txtElecMonth.setBackground(java.awt.Color.WHITE);
-        txtWaterYear.setBackground(java.awt.Color.WHITE);
-        txtElecYear.setBackground(java.awt.Color.WHITE);
     }//GEN-LAST:event_save_btnActionPerformed
 
+    // Method to FILTER the Jtable contents based on unit number
     private void cmbUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUnitActionPerformed
-        // TODO add your handling code here:
+        // Setting the table header titles
         String[] columnNames = { "ID", "Unit #", "Tenant", "Rent", "Internet", "Electricity", "Water", "Month", "Year" };
-        String query; // Your query
+        String query; 
         Object[][] data = {}; // Empty data for a blank table
         DefaultTableModel model;
         
@@ -905,11 +921,11 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         // Polymorphism; switch-case; query and model overriding
         switch (unitSelected) {
             case "Unit 1":
-                query = "SELECT * FROM bill_tbl WHERE unit_id = 1"; // Your query
+                query = "SELECT * FROM bill_tbl WHERE unit_id = 1"; 
                 model = DatabaseUtility.fetchData(query, null, columnNames); // Abstraction; code for DatabaseUtility.mysqlQuery is hidden
 
                 // Set the model to the JTable
-                tblContent.setModel(model);  // Replace 'yourJTable' with your actual JTable variable
+                tblContent.setModel(model);  
                 break;
             case "Unit 2":
                 query = "SELECT * FROM bill_tbl WHERE unit_id = 2"; // Your query
@@ -941,8 +957,12 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         }
     }//GEN-LAST:event_cmbUnitActionPerformed
 
+    // Method to clear all textFields
     private void cancel_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancel_btnActionPerformed
-        // TODO add your handling code here:
+        /**
+         * Encapsulation; setters
+         * Reset all textFields
+         */
         txtUnit.setText("");
         txtRent.setText("");
         txtInternet.setText("");
@@ -973,19 +993,18 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         txtWaterYear.setFocusable(true);
         txtElecMonth.setFocusable(true);
         txtElecYear.setFocusable(true);
-        txtWaterMonth.setBackground(java.awt.Color.WHITE);
-        txtElecMonth.setBackground(java.awt.Color.WHITE);
-        txtWaterYear.setBackground(java.awt.Color.WHITE);
-        txtElecYear.setBackground(java.awt.Color.WHITE);
-        
     }//GEN-LAST:event_cancel_btnActionPerformed
 
+    // Method to calculate water bill
     private void btnWaterCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWaterCalcActionPerformed
-        // TODO add your handling code here:
+        // Set the initial values for calculation
         float waterPrev = 0f;
         float waterCurr = 0f;
         float waterRate = 0f;
         
+        /**
+         * Encapsulation (getters) with error handling
+         */
         try {
             // Water fields
             String waterPrevText = txtWaterPrev.getText().trim();
@@ -997,8 +1016,6 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             String waterRateText = txtWaterRate.getText().trim();
             if (!waterRateText.isEmpty()) waterRate = Float.parseFloat(waterRateText);
 
-            
-            // Additional code can go here
         } catch (NumberFormatException e) {
             // Handle invalid input (non-numeric data in fields)
             JOptionPane.showMessageDialog(null, "Please enter valid numeric values.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -1011,16 +1028,21 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
         float waterConsume = waterCurr - waterPrev;
         float waterBill = waterConsume * waterRate;
         
+        // Set the calculated text
         txtWaterConsume.setText(String.valueOf(waterConsume));
         txtWaterTotal.setText(String.valueOf(waterBill));
     }//GEN-LAST:event_btnWaterCalcActionPerformed
 
+    // Method to calculate electricity bill
     private void btnElecCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElecCalcActionPerformed
-        // TODO add your handling code here:
+         // Set the initial values for calculation
         float elecPrev = 0f;
         float elecCurr = 0f;
         float elecRate = 0f;
         
+        /**
+         * Encapsulation (getters) with error handling
+         */
         try {
             // Water fields
             String elecPrevText = txtElecPrev.getText().trim();
@@ -1032,8 +1054,6 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             String elecRateText = txtElecRate.getText().trim();
             if (!elecRateText.isEmpty()) elecRate = Float.parseFloat(elecRateText);
 
-            
-            // Additional code can go here
         } catch (NumberFormatException e) {
             // Handle invalid input (non-numeric data in fields)
             JOptionPane.showMessageDialog(null, "Please enter valid numeric values.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -1042,9 +1062,11 @@ public class Main extends javax.swing.JFrame { // Inheritance (uses "extends")
             JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        // Calculate consumptions and bills  
         float elecConsume = elecCurr - elecPrev;
         float elecBill = elecConsume * elecRate;
         
+        // Set the calculated text
         txtElecConsume.setText(String.valueOf(elecConsume));
         txtElecTotal.setText(String.valueOf(elecBill));
     }//GEN-LAST:event_btnElecCalcActionPerformed
