@@ -4,6 +4,7 @@ Name: Ched Neo H. Garcia
 Section: IT-2106
 
 Project Title: DueDeet: Tenant Management and Billing Solution
+
 Description: 
   This application is designed to streamline the management of establishment rentals by tracking key details 
 such as monthly rent payment, individual bills for water, electricity, and internet consumption on a regular basis. 
