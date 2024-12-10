@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2024 at 11:03 AM
+-- Generation Time: Dec 10, 2024 at 09:44 AM
 -- Server version: 5.6.26
 -- PHP Version: 5.5.28
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `bill_tbl` (
   `water` float NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=426 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=416 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bill_tbl`
@@ -62,7 +62,8 @@ INSERT INTO `bill_tbl` (`bill_id`, `unit_id`, `tenant_name`, `rent`, `internet`,
 (411, 4, 'Maria Hernandez', 3500, 300, 295.96, 295.96, 11, 2024),
 (412, 4, 'Maria Hernandez', 3500, 300, 405.42, 405.42, 10, 2024),
 (413, 4, 'Maria Hernandez', 3500, 300, 324.21, 324.21, 9, 2024),
-(414, 4, 'Maria Hernandez', 3500, 300, 349.6, 349.6, 8, 2024);
+(414, 4, 'Maria Hernandez', 3500, 300, 349.6, 349.6, 8, 2024),
+(415, 1, 'Sofia Rodriguez', 3500, 300, 270, 407, 7, 2024);
 
 -- --------------------------------------------------------
 
@@ -80,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `electricity_tbl` (
   `total` float NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `electricity_tbl`
@@ -106,7 +107,8 @@ INSERT INTO `electricity_tbl` (`electricity_id`, `unit_id`, `previous`, `current
 (28, 4, 210.3, 240.5, 30.2, 9.8, 295.96, 11, 2024),
 (29, 4, 240.5, 270.8, 30.3, 13.4, 405.42, 10, 2024),
 (30, 4, 270.8, 301.1, 30.3, 10.7, 324.21, 9, 2024),
-(31, 4, 301.1, 331.5, 30.4, 11.5, 349.6, 8, 2024);
+(31, 4, 301.1, 331.5, 30.4, 11.5, 349.6, 8, 2024),
+(32, 1, 123, 160, 37, 11, 407, 7, 2024);
 
 -- --------------------------------------------------------
 
@@ -152,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `water_tbl` (
   `total` float NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `water_tbl`
@@ -178,7 +180,8 @@ INSERT INTO `water_tbl` (`water_id`, `unit_id`, `previous`, `current`, `consumpt
 (34, 4, 210.3, 240.5, 30.2, 9.8, 295.96, 11, 2024),
 (35, 4, 240.5, 270.8, 30.3, 13.4, 405.42, 10, 2024),
 (36, 4, 270.8, 301.1, 30.3, 10.7, 324.21, 9, 2024),
-(37, 4, 301.1, 331.5, 30.4, 11.5, 349.6, 8, 2024);
+(37, 4, 301.1, 331.5, 30.4, 11.5, 349.6, 8, 2024),
+(38, 1, 123, 150, 27, 10, 270, 7, 2024);
 
 --
 -- Indexes for dumped tables
@@ -216,12 +219,12 @@ ALTER TABLE `water_tbl`
 -- AUTO_INCREMENT for table `bill_tbl`
 --
 ALTER TABLE `bill_tbl`
-  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=426;
+  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=416;
 --
 -- AUTO_INCREMENT for table `electricity_tbl`
 --
 ALTER TABLE `electricity_tbl`
-  MODIFY `electricity_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+  MODIFY `electricity_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `unit_tbl`
 --
@@ -231,7 +234,7 @@ ALTER TABLE `unit_tbl`
 -- AUTO_INCREMENT for table `water_tbl`
 --
 ALTER TABLE `water_tbl`
-  MODIFY `water_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
+  MODIFY `water_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
